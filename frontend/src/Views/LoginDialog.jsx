@@ -14,13 +14,12 @@ import { TOKEN_COOKIE_NAME } from "../constant";
 import Alert from "@mui/material/Alert";
 import axios from "../axios/index";
 import cookie from "react-cookies";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 const LOGIN_URL = "/api/auth/login";
 
 export default function LoginDialog() {
-
   const navigate = useNavigate();
   const userRef = useRef();
   const errRef = useRef();
@@ -40,21 +39,23 @@ export default function LoginDialog() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post(LOGIN_URL,JSON.stringify({ username: user, password: pwd }),
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }).then(response => {
-            const token = response.data.id_token;
-            const username = response.data.username;
-            cookie.save(TOKEN_COOKIE_NAME, token);
-            cookie.save("username", username);
+    axios
+      .post(LOGIN_URL, JSON.stringify({ username: user, password: pwd }), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      .then((response) => {
+        const token = response.data.id_token;
+        const username = response.data.username;
+        cookie.save(TOKEN_COOKIE_NAME, token);
+        cookie.save("username", username);
         console.log(response.data.message, token, username);
-        navigate('/');
+        navigate("/");
         window.location.reload();
-    }).catch(error => {
-      console.log(error);
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -127,10 +128,8 @@ export default function LoginDialog() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-              </Grid>
-              <Grid item>
-              </Grid>
+              <Grid item xs></Grid>
+              <Grid item></Grid>
             </Grid>
           </Box>
         </Box>

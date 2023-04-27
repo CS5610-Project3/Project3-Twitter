@@ -1,23 +1,22 @@
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
+import * as React from "react";
+import { useEffect } from "react";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import {Pagination, Stack, SvgIcon} from "@mui/material";
+import { Stack, SvgIcon } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import Post from "../Component/Post";
-import cookie from "react-cookies"
-import { UserService } from '../service/UserService';
-import { TOKEN_COOKIE_NAME } from '../constant';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Post from "../component/Post";
+import cookie from "react-cookies";
+import { UserService } from "../service/UserService";
+import { TOKEN_COOKIE_NAME } from "../constant";
 import Button from "@mui/material/Button";
-import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
-import { useNavigate } from 'react-router';
+import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
+import { useNavigate } from "react-router";
 import Avatar from "@mui/material/Avatar";
-import { PostService } from '../service/PostService';
-import { useEffect } from 'react';
+import { PostService } from "../service/PostService";
 
 export default function AllPosts() {
-
   const [posts, setPosts] = React.useState([]);
 
   const navigator = useNavigate();
@@ -26,47 +25,66 @@ export default function AllPosts() {
   const [timestamp, setTimestamp] = React.useState(null);
   const [avatartURL, setAvatarURL] = React.useState(null);
 
-  function deletePost(postid){
-    PostService.deletePostById(postid).then((res) => {
-      console.log(res);
-      window.location.reload();
-    }).catch((err) => {console.log(err);});
-      
+  function deletePost(postid) {
+    PostService.deletePostById(postid)
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function formatDate(timestamp) {
     const date = new Date(timestamp);
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
-  
+
     const month = monthNames[date.getMonth()];
     const day = date.getDate();
     const year = date.getFullYear();
-  
+
     return `${month} ${day}, ${year}`;
   }
 
   useEffect(() => {
     if (isLogin) {
-
-    UserService.getUserInfo(username).then((res) => {
-      console.log(res);
-      const timestamp = res.data.userData.createdAt;
-      const formattedTimestamp = formatDate(timestamp);
-      setAvatarURL(res.data.userData.profileImage);
-      setTimestamp(formattedTimestamp);
-    }).catch((err) => {console.log(err);});
-    PostService.getPostsByUser(username).then((res) => {
-      console.log(res);
-      setPosts(res.data.posts);
-    }).catch((err) => {console.log(err);});}
-
-    else {
+      UserService.getUserInfo(username)
+        .then((res) => {
+          console.log(res);
+          const timestamp = res.data.userData.createdAt;
+          const formattedTimestamp = formatDate(timestamp);
+          setAvatarURL(res.data.userData.profileImage);
+          setTimestamp(formattedTimestamp);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      PostService.getPostsByUser(username)
+        .then((res) => {
+          console.log(res);
+          setPosts(res.data.posts);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
       navigator("login");
     }
-    }, []);
+  }, []);
 
   return (
     <Box
@@ -82,26 +100,30 @@ export default function AllPosts() {
     >
       <Container maxWidth="md">
         <Stack spacing={3}>
-        <Stack direction="row" justifyContent="space-between" spacing={4}>
-        <Stack alignItems="center" direction="row" spacing={2}>
-          <Avatar alt={username} src={avatartURL} /> 
-          <Typography variant="h4">{username}</Typography> 
-          <Stack alignItems="center" direction="row" spacing={1}>
-            <SvgIcon color="action" fontSize="small">
-              <CalendarMonthIcon/>
-            </SvgIcon>
-            <Typography color="text.secondary" display="inline" variant="body2">
-              Joined {timestamp}
-            </Typography>
-          </Stack>
-        </Stack>
+          <Stack direction="row" justifyContent="space-between" spacing={4}>
+            <Stack alignItems="center" direction="row" spacing={2}>
+              <Avatar alt={username} src={avatartURL} />
+              <Typography variant="h4">{username}</Typography>
+              <Stack alignItems="center" direction="row" spacing={1}>
+                <SvgIcon color="action" fontSize="small">
+                  <CalendarMonthIcon />
+                </SvgIcon>
+                <Typography
+                  color="text.secondary"
+                  display="inline"
+                  variant="body2"
+                >
+                  Joined {timestamp}
+                </Typography>
+              </Stack>
+            </Stack>
             <div>
               <Button
-                startIcon={(
+                startIcon={
                   <SvgIcon fontSize="small">
-                    <PlusIcon/>
+                    <PlusIcon />
                   </SvgIcon>
-                )}
+                }
                 variant="contained"
               >
                 Add
@@ -123,10 +145,15 @@ export default function AllPosts() {
                 sx={{
                   marginBottom: "1rem",
                   paddingBottom: "1rem",
-                  borderBottom: index === posts.length - 1 ? "none" : "1px solid #e0e0e0",
+                  borderBottom:
+                    index === posts.length - 1 ? "none" : "1px solid #e0e0e0",
                 }}
               >
-                <Post login={"user"} post={post} handleDeleteClick={deletePost}/>
+                <Post
+                  login={"user"}
+                  post={post}
+                  handleDeleteClick={deletePost}
+                />
               </Grid>
             ))}
           </Grid>

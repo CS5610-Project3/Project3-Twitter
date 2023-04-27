@@ -1,25 +1,25 @@
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
+import * as React from "react";
+import {useEffect} from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import {Pagination, Stack, SvgIcon} from "@mui/material";
+import {Stack} from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Post from "../Component/Post";
-import cookie from "react-cookies"
-import { TOKEN_COOKIE_NAME } from '../constant';
-import { useEffect } from 'react';
-import { PostService } from '../service/PostService';
+import Post from "../component/Post";
+import {PostService} from "../service/PostService";
 
 export default function UserPost() {
-
   const [posts, setPosts] = React.useState([]);
 
-    useEffect(() => {
-      PostService.getAllPosts().then((res) => {
+  useEffect(() => {
+    PostService.getAllPosts()
+      .then((res) => {
         console.log(res);
         setPosts(res.data.posts);
-      }).catch((err) => {console.log(err);});
-      }, []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Box
@@ -50,7 +50,8 @@ export default function UserPost() {
                 sx={{
                   marginBottom: "1rem",
                   paddingBottom: "1rem",
-                  borderBottom: index === posts.length - 1 ? "none" : "1px solid #e0e0e0",
+                  borderBottom:
+                    index === posts.length - 1 ? "none" : "1px solid #e0e0e0",
                 }}
               >
                 <Post login={"all"} post={post} />
