@@ -14,7 +14,7 @@ import UserList from "./UserList.jsx";
 
 export default function UserPost() {
   const [posts, setPosts] = useState([]);
-  const [displayedPosts, setDisplayedPosts] = useState(10);
+  const [displayedPosts, setDisplayedPosts] = useState(5);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchClicked, setSearchClicked] = useState(false);
@@ -81,9 +81,11 @@ export default function UserPost() {
       return posts;
     }
     return posts.filter((post) =>
-      post.username.toLowerCase().includes(searchTerm.toLowerCase())
+      post.content.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchClicked, searchTerm, posts]);
+
+  const noMorePosts = displayedPosts >= filteredPosts.length;
 
   return (
     <Box
@@ -127,7 +129,7 @@ export default function UserPost() {
             sx={{ textDecoration: "none", marginLeft: "1rem" }}
           >
             <Button variant="contained" onClick={handleGetUser}>
-              Get Users
+              Find Users
             </Button>
           </Link>
         </Box>
@@ -159,10 +161,23 @@ export default function UserPost() {
               ))}
             </Grid>
 
-            {loading && (
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
+            {noMorePosts ? (
+              <Box
+                sx={{
+                  textAlign: "center",
+                  fontWeight: "300",
+                  color: "grey",
+                  fontSize: "small",
+                }}
+              >
+                No more posts to show.
               </Box>
+            ) : (
+              loading && (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              )
             )}
           </Stack>
         )}

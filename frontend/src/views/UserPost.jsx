@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -17,6 +17,7 @@ import Avatar from "@mui/material/Avatar";
 import { PostService } from "../service/PostService";
 import AddPostDialog from "../component/AddPostDialog";
 import { useParams } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function AllPosts() {
   const params = useParams();
@@ -28,6 +29,39 @@ export default function AllPosts() {
   const [timestamp, setTimestamp] = React.useState(null);
   const [avatartURL, setAvatarURL] = React.useState(null);
   const [addPostDialogOpen, setAddPostDialogOpen] = React.useState(false);
+  const [displayedPosts, setDisplayedPosts] = useState(5);
+  const [loading, setLoading] = useState(false);
+
+  const handleScroll = () => {
+    const scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+    const scrollHeight =
+      (document.documentElement && document.documentElement.scrollHeight) ||
+      document.body.scrollHeight;
+    const clientHeight =
+      document.documentElement.clientHeight || window.innerHeight;
+    const scrolledToBottom =
+      Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+    if (scrolledToBottom && !loading) {
+      setLoading(true);
+      setTimeout(() => {
+        setDisplayedPosts(displayedPosts + 10);
+      }, 500); // add a delay of 1 second
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [displayedPosts]);
 
   if (tempUsername !== undefined && tempUsername !== username) {
     username = tempUsername;
@@ -115,6 +149,8 @@ export default function AllPosts() {
     }
   }, []);
 
+  const noMorePosts = displayedPosts >= posts.length;
+
   return (
     <Box
       component="main"
@@ -182,7 +218,7 @@ export default function AllPosts() {
             justifyContent="center"
             alignItems="center"
           >
-            {posts.map((post, index) => (
+            {posts.slice(0, displayedPosts).map((post, index) => (
               <Grid
                 xs={12}
                 md={8}
@@ -203,6 +239,24 @@ export default function AllPosts() {
               </Grid>
             ))}
           </Grid>
+          {noMorePosts ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                fontWeight: "300",
+                color: "grey",
+                fontSize: "small",
+              }}
+            >
+              No more posts to show.
+            </Box>
+          ) : (
+            loading && (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </Box>
+            )
+          )}
         </Stack>
       </Container>
       <AddPostDialog
