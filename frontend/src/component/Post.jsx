@@ -11,15 +11,24 @@ import SaveIcon from "@mui/icons-material/Save";
 import ClockIcon from "@heroicons/react/24/solid/ClockIcon";
 import Box from "@mui/material/Box";
 import SvgIcon from "@mui/material/SvgIcon";
+import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
+import { useEffect } from "react";
+import { UserService } from "../service/UserService";
 
 export default function Post(props) {
   const post_info = props.post;
   const [content, setContent] = useState(post_info.content);
   const [timestamp, setTimestamp] = useState(post_info.updatedAt);
-
   const [editMode, setEditMode] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+
+  useEffect(() => {
+    UserService.getUserInfo(post_info.username).then((res) => {
+      setProfileImage(res.data.userData.profileImage);
+    });
+  }, []);
 
   const formatRelativeTime = (date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
@@ -37,6 +46,10 @@ export default function Post(props) {
   return (
     <Card sx={{ maxWidth: 500 }}>
       <CardHeader
+        avatar={
+          <Avatar src={profileImage} aria-label="recipe">
+          </Avatar>
+        }
         title={post_info.username}
         subheader={
           <Box component="span" display="flex" alignItems="center">

@@ -89,7 +89,6 @@ export default function AllPosts() {
     if (isLogin) {
       UserService.getUserInfo(username)
         .then((res) => {
-          console.log(res);
           const timestamp = res.data.userData.createdAt;
           const formattedTimestamp = formatDate(timestamp);
           setAvatarURL(res.data.userData.profileImage);
