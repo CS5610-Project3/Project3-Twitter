@@ -13,7 +13,7 @@ connectDB();
 
 // Configure CORS middleware
 const corsOptions = {
-  origin: 'http://127.0.0.1:5174', // Replace with the origin you want to allow
+  origin: 'http://localhost:5174', // Replace with the origin you want to allow
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
   credentials: true, // Enable cookies
