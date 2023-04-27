@@ -36,6 +36,15 @@ export default function AllPosts() {
       });
   }
 
+  function editPost(postid, newContent) {
+    PostService.updatePostById(postid, newContent).then((res) => {
+      console.log(res);
+      window.location.reload()
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   function formatDate(timestamp) {
     const date = new Date(timestamp);
     const monthNames = [
@@ -153,6 +162,7 @@ export default function AllPosts() {
                   login={"user"}
                   post={post}
                   handleDeleteClick={deletePost}
+                  handleEditClick={editPost}
                 />
               </Grid>
             ))}

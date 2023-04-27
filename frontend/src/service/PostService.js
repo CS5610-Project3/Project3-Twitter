@@ -10,8 +10,8 @@ export const PostService = {
   createPost: function (username) {
     return axios.post(`api/post/${username}`);
   },
-  updatePostById: function (postId) {
-    return axios.put(`api/post/${postId}`);
+  updatePostById: function (postId, newContent) {
+    return axios.put(`api/post/${postId}`, { content: newContent });
   },
   deletePostById: function (postId) {
     return axios.delete(`api/post/${postId}`);
