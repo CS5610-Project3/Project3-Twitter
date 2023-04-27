@@ -70,7 +70,7 @@ const handleSignup = async (req, res) => {
         res.cookie("jwt", token);
 
         // Send response
-        res.status(201).json({ message: `New user ${username} created successfully` });
+        res.status(201).json({ message: `New user ${username} created successfully`, id_token: token, username: username });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

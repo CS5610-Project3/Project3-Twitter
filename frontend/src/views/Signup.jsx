@@ -9,9 +9,14 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useRef, useEffect } from "react";
+import { TOKEN_COOKIE_NAME } from "../constant";
 import axios from "../axios/index";
+import { useNavigate } from "react-router-dom";
+import cookie from "react-cookies";
+
 
 const theme = createTheme();
 
@@ -22,6 +27,7 @@ const REGISTRATION_URL = "/api/auth/signup";
 export default function SignUp() {
   const userRef = useRef();
   const errRef = useRef();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
@@ -37,6 +43,7 @@ export default function SignUp() {
 
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -58,6 +65,19 @@ export default function SignUp() {
     setErrMsg("");
   }, [user, pwd, matchPwd]);
 
+  const alertStyles = {
+    width: "100%",
+    opacity: 0,
+    transition: "opacity 0.5s ease-in-out",
+  };
+  
+  const alertContainerStyles = {
+    position: "relative",
+    height: "56px",
+    width: "100%",
+    marginBottom: "16px",
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const v1 = USER_REGEX.test(user);
@@ -66,35 +86,30 @@ export default function SignUp() {
       setErrMsg("Invalid username or password");
       return;
     }
-    console.log(user, pwd);
-    setSuccess(true);
-    try {
-      const res = await axios.post(
-        REGISTRATION_URL,
-        JSON.stringify({ username: user, password: pwd }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
+    
+      axios.post(REGISTRATION_URL, JSON.stringify({ username: user, password: pwd }), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      .then((res) => {
+        const token = res.data.id_token;
+        const username = res.data.username;
+        cookie.save(TOKEN_COOKIE_NAME, token);
+        cookie.save("username", username);
+        navigate("/");
+        window.location.reload();
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 409) {
+          setErrMsg("Username already exists");
+        } else {
+          setErrMsg("Unknown error");
         }
-      );
-      console.log(res?.username);
-      setSuccess(true);
-      // clear the form
-      setUser("");
-      setPwd("");
-      setMatchPwd("");
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg("Network error");
-      } else if (err.response.status === 409) {
-        setErrMsg("Username already exists");
-      } else {
-        setErrMsg("Unknown error");
-      }
-      errRef.current.focus();
-    }
+        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(false);
+        }, 1500);
+      });
   };
 
   return (
@@ -109,6 +124,33 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
+                    <Box sx={alertContainerStyles}>
+          {success ? (
+            <Alert 
+              severity="success" 
+              sx={{
+                ...alertStyles,
+                opacity: alertVisible ? 1 : 0,
+              }}
+              ref={errRef}
+            >
+              You are singed up successfully!
+            </Alert>
+          ) : (
+            errMsg && (
+              <Alert     
+                severity="error"
+                sx={{
+                  ...alertStyles,
+                  opacity: alertVisible ? 1 : 0,
+                }}
+                ref={errRef}
+              >
+                {errMsg}
+              </Alert>
+            )
+          )}
+          </Box>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
