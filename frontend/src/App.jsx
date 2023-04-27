@@ -5,6 +5,7 @@ import AllPosts from "./views/AllPosts.jsx";
 import LoginDialog from "./views/LoginDialog.jsx";
 import Signup from "./views/Signup.jsx";
 import UserPost from "./views/UserPost.jsx";
+import UserList from "./views/UserList.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="signup" element={<Signup />} />
         <Route path="user-post" element={<UserPost />} />
         <Route path="/:username" element={<UserPost />} />
+        <Route path="user-list" element={<UserList />} />
       </Routes>
     </div>
   );

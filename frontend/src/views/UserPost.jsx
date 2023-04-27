@@ -18,7 +18,6 @@ import { PostService } from "../service/PostService";
 import AddPostDialog from "../component/AddPostDialog";
 import { useParams } from "react-router-dom";
 
-
 export default function AllPosts() {
   const params = useParams();
   const tempUsername = params.username;
@@ -45,8 +44,6 @@ export default function AllPosts() {
       });
   }
 
-
-
   function deletePost(postid) {
     PostService.deletePostById(postid)
       .then((res) => {
@@ -59,12 +56,14 @@ export default function AllPosts() {
   }
 
   function editPost(postid, newContent) {
-    PostService.updatePostById(postid, newContent).then((res) => {
-      console.log(res);
-      window.location.reload()
-    }).catch((err) => {
-      console.log(err);
-    });
+    PostService.updatePostById(postid, newContent)
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function formatDate(timestamp) {
@@ -132,8 +131,21 @@ export default function AllPosts() {
         <Stack spacing={3}>
           <Stack direction="row" justifyContent="space-between" spacing={4}>
             <Stack alignItems="center" direction="row" spacing={2}>
-              <Avatar alt={username} src={avatartURL} />
-              <Typography variant="h4">{username}</Typography>
+              <Avatar
+                alt={username}
+                src={avatartURL}
+                sx={{ width: "5rem", height: "5rem" }}
+              />
+              <Typography
+                variant="h4"
+                sx={{
+                  fontFamily: '"Helvetica Neue", Arial, sans-serif',
+                  fontSize: "2rem",
+                  fontWeight: "600",
+                }}
+              >
+                {username}
+              </Typography>
               <Stack alignItems="center" direction="row" spacing={1}>
                 <SvgIcon color="action" fontSize="small">
                   <CalendarMonthIcon />
@@ -148,22 +160,19 @@ export default function AllPosts() {
               </Stack>
             </Stack>
             <div>
-            {
-              tempUsername === null || tempUsername !== username ? (
-              <Button
-                startIcon={
-                  <SvgIcon fontSize="small">
-                    <PlusIcon />
-                  </SvgIcon>
+              {tempUsername === null || tempUsername !== username ? (
+                <Button
+                  startIcon={
+                    <SvgIcon fontSize="small">
+                      <PlusIcon />
+                    </SvgIcon>
                   }
                   variant="contained"
                   onClick={() => setAddPostDialogOpen(true)}
                 >
-                  Add
+                  New Post
                 </Button>
-              ) : null
-            }
-
+              ) : null}
             </div>
           </Stack>
 
