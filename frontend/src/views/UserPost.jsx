@@ -149,8 +149,7 @@ export default function AllPosts() {
             </Stack>
             <div>
             {
-              tempUsername !== undefined &&
-              tempUsername !== username ? (
+              tempUsername === null || tempUsername !== username ? (
               <Button
                 startIcon={
                   <SvgIcon fontSize="small">
