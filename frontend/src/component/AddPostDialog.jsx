@@ -5,15 +5,24 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import badWords from "bad-words";
 
 const MAX_LENGTH = 140;
+const filter = new badWords();
 
 export default function AddPostDialog({ open, handleClose, handleAddPost }) {
   const [content, setContent] = useState("");
   const [charCount, setCharCount] = useState(0);
 
   const handleSubmit = () => {
-    handleAddPost(content);
+    // Replace inappropriate words with asterisks
+    const cleanContent = content
+      .split(" ")
+      .map((word) =>
+        filter.isProfane(word) ? word.replace(/./g, "*") : word
+      )
+      .join(" ");
+    handleAddPost(cleanContent);
     setContent("");
     handleClose();
   };
@@ -47,9 +56,10 @@ export default function AddPostDialog({ open, handleClose, handleAddPost }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit} disabled={isDisabled}>Submit</Button>
+        <Button onClick={handleSubmit} disabled={isDisabled}>
+          Submit
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
-
