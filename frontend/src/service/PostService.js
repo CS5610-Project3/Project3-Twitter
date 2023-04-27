@@ -7,8 +7,8 @@ export const PostService = {
   getPostsByUser: function (username) {
     return axios.get(`api/post/${username}`);
   },
-  createPost: function (username) {
-    return axios.post(`api/post/${username}`);
+  createPost: function (username, newContent) {
+    return axios.post(`api/post/${username}`, { content: newContent });
   },
   updatePostById: function (postId, newContent) {
     return axios.put(`api/post/${postId}`, { content: newContent });
