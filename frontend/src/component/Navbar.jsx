@@ -19,9 +19,17 @@ import { UserService } from "../service/UserService";
 
 export default function Navbar() {
   const [activeUsername, setActiveUsername] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [profileImage, setProfileImage] = React.useState(null);
   const navigate = useNavigate();
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   useEffect(() => {
     setActiveUsername(cookie.load("username"));
@@ -72,35 +80,36 @@ export default function Navbar() {
           </Typography>
           {hasLoggedIn && (
             <div>
-              <Button color="inherit" onClick={handleMenu}>
+              <Button color="inherit" onClick={handleOpenUserMenu}>
                 <Avatar src={profileImage} aria-label="recipe" sx={{marginRight: 1} }></Avatar>
                 <Typography variant="button">{activeUsername}</Typography>
                 <KeyboardArrowDownIcon />
               </Button>
               <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleClose} component={Link} to="/">
-                  All Posts
+                  Main Page
                 </MenuItem>
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
                   to="/user-post"
                 >
-                  User Posts
+                  User Page
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
               </Menu>
