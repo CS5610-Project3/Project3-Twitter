@@ -9,7 +9,6 @@ import { PostService } from "../service/PostService";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 import UserList from "./UserList.jsx";
 
 export default function UserPost() {
@@ -17,7 +16,6 @@ export default function UserPost() {
   const [displayedPosts, setDisplayedPosts] = useState(5);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchClicked, setSearchClicked] = useState(false);
   const [getUserClicked, setGetUserClicked] = useState(false);
 
   useEffect(() => {
@@ -46,7 +44,7 @@ export default function UserPost() {
     if (scrolledToBottom && !loading) {
       setLoading(true);
       setTimeout(() => {
-        setDisplayedPosts(displayedPosts + 10);
+        setDisplayedPosts(displayedPosts + 5);
       }, 500); // add a delay of 1 second
     }
   };
@@ -62,30 +60,13 @@ export default function UserPost() {
     setLoading(false);
   }, [displayedPosts]);
 
-  const handleSearch = () => {
-    setSearchClicked(true);
-  };
-
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    setSearchClicked(false);
-    setGetUserClicked(false);
-  };
 
   const handleGetUser = () => {
     setGetUserClicked(true);
   };
 
-  const filteredPosts = useMemo(() => {
-    if (!searchClicked || searchTerm === "") {
-      return posts;
-    }
-    return posts.filter((post) =>
-      post.content.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchClicked, searchTerm, posts]);
 
-  const noMorePosts = displayedPosts >= filteredPosts.length;
+  const noMorePosts = displayedPosts >= posts.length;
 
   return (
     <Box
@@ -110,28 +91,9 @@ export default function UserPost() {
             onChange={(event) => setSearchTerm(event.target.value)}
             sx={{ width: "50%", mr: "1rem" }}
           />
-          <Button
-            variant="contained"
-            onClick={handleSearch}
-            sx={{ mr: "1rem" }}
-          >
-            Search
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ mr: "1rem" }}
-            onClick={handleClearSearch}
-          >
-            Go Back
-          </Button>
-          <Link
-            to="/user-list"
-            sx={{ textDecoration: "none", marginLeft: "1rem" }}
-          >
             <Button variant="contained" onClick={handleGetUser}>
               Find Users
             </Button>
-          </Link>
         </Box>
         {getUserClicked ? (
           <UserList posts={[1, 2, 3]} />
@@ -143,7 +105,7 @@ export default function UserPost() {
               justifyContent="center"
               alignItems="center"
             >
-              {filteredPosts.slice(0, displayedPosts).map((post, index) => (
+              {posts.slice(0, displayedPosts).map((post, index) => (
                 <Grid
                   item
                   xs={12}
