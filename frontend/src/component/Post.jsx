@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 import ClockIcon from "@heroicons/react/24/solid/ClockIcon";
 import Box from "@mui/material/Box";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -18,15 +19,19 @@ export default function Post(props) {
   const [content, setContent] = useState(post_info.content);
   const [timestamp, setTimestamp] = useState(post_info.updatedAt);
 
-  const [editMode, setEditMode] = useState()
+  const [editMode, setEditMode] = useState(false);
 
   const formatRelativeTime = (date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
   };
 
   function editContent() {
-    setContent("Test Edit");
-    // call api to change whole post(including timestamp)
+    setEditMode(true);
+  }
+
+  function editSave(){
+    setEditMode(false);
+    props.handleEditClick(post_info._id, content);
   }
 
   return (
@@ -45,15 +50,30 @@ export default function Post(props) {
         }
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {content}
-        </Typography>
+        {editMode ? (
+          <textarea
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            rows={5}
+            style={{ width: "100%" }}
+          />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            {content}
+          </Typography>
+        )}
       </CardContent>
       {props.login === "user" && (
         <CardActions disableSpacing>
-          <IconButton aria-label="edit" onClick={editContent}>
-            <EditIcon />
-          </IconButton>
+          {editMode ? (
+            <IconButton aria-label="save" onClick={editSave}>
+              <SaveIcon />
+            </IconButton>
+          ) : (
+            <IconButton aria-label="edit" onClick={() => setEditMode(true)}>
+              <EditIcon />
+            </IconButton>
+          )}
           <IconButton
             aria-label="delete"
             onClick={() => props.handleDeleteClick(post_info._id)}
