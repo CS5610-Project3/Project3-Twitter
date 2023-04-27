@@ -28,7 +28,6 @@ export default function Post(props) {
   const [profileImage, setProfileImage] = useState(null);
   const [activeUsername, setActiveUsername] = React.useState(null);
 
-
   useEffect(() => {
     setActiveUsername(cookie.load("username"));
   }, []);
@@ -39,7 +38,7 @@ export default function Post(props) {
       return;
     }
     navigate(`/${username}`);
-  };  
+  };
 
   useEffect(() => {
     UserService.getUserInfo(post_info.username).then((res) => {
@@ -51,42 +50,74 @@ export default function Post(props) {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
   };
 
-  function editContent() {
-    setEditMode(true);
-  }
-
-  function editSave(){
+  function editSave() {
     setEditMode(false);
     props.handleEditClick(post_info._id, content);
   }
 
+  function handleDeleteClick() {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      props.handleDeleteClick(post_info._id);
+    }
+  }
+
   return (
     <Card sx={{ maxWidth: 500 }}>
-          <Typography
-      component="span"
-      variant="subtitle1"
-      sx={{ cursor: 'pointer' }}
-      onClick={() => handleUsernameClick(post_info.username)}
-    >
       <CardHeader
         avatar={
-          <Avatar src={profileImage} aria-label="recipe">
-          </Avatar>
+          <Avatar
+            src={profileImage}
+            aria-label="recipe"
+            sx={{ width: "3rem", height: "3rem" }}
+          ></Avatar>
         }
-        title={post_info.username}
-        subheader={
-          <Box component="span" display="flex" alignItems="center">
-            <SvgIcon color="action" fontSize="small">
-              <ClockIcon />
-            </SvgIcon>
-            <Box component="span" sx={{ marginLeft: "0.5rem" }}>
-              {formatRelativeTime(timestamp)}
+        title={
+          <Box component="span" display="flex" flexDirection="column">
+            <Box
+              component="span"
+              display="flex"
+              alignItems="center"
+              onClick={() => handleUsernameClick(post_info.username)}
+            >
+              <Typography
+                component="span"
+                variant="subtitle1"
+                fontWeight="800"
+                fontFamily='"Helvetica Neue", Arial, sans-serif'
+                sx={{ cursor: "pointer" }}
+              >
+                {post_info.username}
+              </Typography>
+              <img
+                src="/src/assets/Twitter_Verified_Badge.svg"
+                alt="Verified"
+                style={{
+                  marginLeft: "0.25rem",
+                  fill: "blue",
+                  width: "1.1rem",
+                  height: "auto",
+                }}
+              />
+            </Box>
+            <Box component="span" display="flex" alignItems="center">
+              <SvgIcon
+                color="action"
+                fontSize="inherit"
+                sx={{ fontSize: "0.7rem" }}
+              >
+                <ClockIcon />
+              </SvgIcon>
+              <Box component="span" sx={{ marginLeft: "0.3rem" }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.8rem" }}>
+                  {formatRelativeTime(timestamp)}
+                </Typography>
+              </Box>
             </Box>
           </Box>
         }
       />
-    </Typography>
-      <CardContent>
+
+      <CardContent sx={{ marginBottom: editMode || props.login === activeUsername ? "0px" : "20px" }}>
         {editMode ? (
           <textarea
             value={content}
@@ -95,13 +126,28 @@ export default function Post(props) {
             style={{ width: "100%" }}
           />
         ) : (
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.primary"
+            sx={{
+              fontFamily: '"Helvetica Neue", Arial, sans-serif',
+              marginLeft: "2rem",
+              fontSize: "0.9rem",
+            }}
+          >
             {content}
           </Typography>
         )}
       </CardContent>
       {props.login === activeUsername && (
-        <CardActions disableSpacing>
+        <CardActions
+          disableSpacing
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "auto",
+          }}
+        >
           {editMode ? (
             <IconButton aria-label="save" onClick={editSave}>
               <SaveIcon />
@@ -113,7 +159,7 @@ export default function Post(props) {
           )}
           <IconButton
             aria-label="delete"
-            onClick={() => props.handleDeleteClick(post_info._id)}
+            onClick={handleDeleteClick}
           >
             <DeleteIcon />
           </IconButton>
