@@ -96,7 +96,7 @@ export default function UserPost() {
             </Button>
         </Box>
         {getUserClicked ? (
-          <UserList posts={[1, 2, 3]} />
+          <UserList usercards={后端传过来的user列表} />
         ) : (
           <Stack spacing={3}>
             <Grid
