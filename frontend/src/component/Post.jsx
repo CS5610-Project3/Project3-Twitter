@@ -18,6 +18,8 @@ export default function Post(props) {
   const [content, setContent] = useState(post_info.content);
   const [timestamp, setTimestamp] = useState(post_info.updatedAt);
 
+  const [editMode, setEditMode] = useState()
+
   const formatRelativeTime = (date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
   };

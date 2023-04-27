@@ -1,10 +1,10 @@
 import "./App.css";
 import Navbar from "./component/Navbar.jsx";
 import { Route, Routes } from "react-router-dom";
-import AllPosts from "./Views/AllPosts.jsx";
-import LoginDialog from "./Views/LoginDialog.jsx";
-import Signup from "./Views/Signup.jsx";
-import UserPost from "./Views/UserPost.jsx";
+import AllPosts from "./views/AllPosts.jsx";
+import LoginDialog from "./views/LoginDialog.jsx";
+import Signup from "./views/Signup.jsx";
+import UserPost from "./views/UserPost.jsx";
 
 function App() {
   return (
