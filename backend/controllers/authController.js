@@ -54,7 +54,8 @@ const handleSignup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Generate random avatar
-        const avatartURL = `https://avatars.dicebear.com/api/avataaars/${username}.svg`;
+        const avatartURL = `https://i.pravatar.cc/150?u=${username}`;
+        
 
         // Create new user
         const user = await User.create({
