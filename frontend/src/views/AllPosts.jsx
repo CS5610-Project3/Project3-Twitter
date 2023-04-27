@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import UserList from "./UserList.jsx";
+import { UserService } from "../service/UserService.js";
 
 export default function UserPost() {
   const [posts, setPosts] = useState([]);
@@ -17,6 +18,8 @@ export default function UserPost() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [getUserClicked, setGetUserClicked] = useState(false);
+  const [users, setUsers] = useState(null);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     PostService.getAllPosts()
@@ -60,11 +63,29 @@ export default function UserPost() {
     setLoading(false);
   }, [displayedPosts]);
 
-
   const handleGetUser = () => {
-    setGetUserClicked(true);
+    if (searchTerm === "") {
+      setGetUserClicked(false);
+    } else {
+      setCount(count + 1);
+    }
   };
 
+  const goBack = () => {
+    setGetUserClicked(false);
+  };
+
+  useEffect(() => {
+    UserService.getUserByKeyword(searchTerm)
+      .then((res) => {
+        console.log(res.data);
+        setUsers(res.data);
+        setGetUserClicked(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [count]);
 
   const noMorePosts = displayedPosts >= posts.length;
 
@@ -89,14 +110,21 @@ export default function UserPost() {
             size="small"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
-            sx={{ width: "50%", mr: "1rem" }}
+            sx={{ width: "30%", mr: "1rem", ml: "10rem" }}
           />
-            <Button variant="contained" onClick={handleGetUser}>
-              Find Users
-            </Button>
+          <Button
+            variant="contained"
+            onClick={handleGetUser}
+            sx={{ mr: "1rem" }}
+          >
+            Find Users
+          </Button>
+          <Button variant="contained" onClick={goBack}>
+            Back
+          </Button>
         </Box>
         {getUserClicked ? (
-          <UserList usercards={后端传过来的user列表} />
+          <UserList usercards={users} />
         ) : (
           <Stack spacing={3}>
             <Grid
