@@ -6,14 +6,24 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+const MAX_LENGTH = 140;
+
 export default function AddPostDialog({ open, handleClose, handleAddPost }) {
   const [content, setContent] = useState("");
+  const [charCount, setCharCount] = useState(0);
 
   const handleSubmit = () => {
     handleAddPost(content);
     setContent("");
     handleClose();
   };
+
+  const handleChange = (e) => {
+    setContent(e.target.value);
+    setCharCount(e.target.value.length);
+  };
+
+  const isDisabled = charCount > MAX_LENGTH;
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -27,15 +37,19 @@ export default function AddPostDialog({ open, handleClose, handleAddPost }) {
           type="text"
           fullWidth
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={handleChange}
           multiline
-          rows={4}
+          rows={8}
+          style={{ width: 450 }}
+          inputProps={{ maxLength: MAX_LENGTH }}
+          helperText={`${charCount}/${MAX_LENGTH}`}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button onClick={handleSubmit} disabled={isDisabled}>Submit</Button>
       </DialogActions>
     </Dialog>
   );
 }
+
