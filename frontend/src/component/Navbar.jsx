@@ -8,21 +8,30 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Button from "@mui/material/Button";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { useEffect } from "react";
 import cookie from "react-cookies";
 import { TOKEN_COOKIE_NAME as T, TOKEN_COOKIE_NAME } from "../constant";
 import { useNavigate } from "react-router";
+import { UserService } from "../service/UserService";
 
 export default function Navbar() {
   const [activeUsername, setActiveUsername] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [profileImage, setProfileImage] = React.useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     setActiveUsername(cookie.load("username"));
   }, []);
+
+  useEffect(() => {
+    UserService.getUserInfo(activeUsername).then((res) => {
+      setProfileImage(res.data.userData.profileImage);
+    });
+  }, [activeUsername]);
 
   const hasLoggedIn = !!cookie.load(TOKEN_COOKIE_NAME);
 
@@ -64,6 +73,7 @@ export default function Navbar() {
           {hasLoggedIn && (
             <div>
               <Button color="inherit" onClick={handleMenu}>
+                <Avatar src={profileImage} aria-label="recipe" sx={{marginRight: 1} }></Avatar>
                 <Typography variant="button">{activeUsername}</Typography>
                 <KeyboardArrowDownIcon />
               </Button>
