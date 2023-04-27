@@ -15,6 +15,8 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { useNavigate } from "react-router";
 import Avatar from "@mui/material/Avatar";
 import { PostService } from "../service/PostService";
+import AddPostDialog from "../component/AddPostDialog";
+
 
 export default function AllPosts() {
   const [posts, setPosts] = React.useState([]);
@@ -24,6 +26,20 @@ export default function AllPosts() {
   const username = cookie.load("username");
   const [timestamp, setTimestamp] = React.useState(null);
   const [avatartURL, setAvatarURL] = React.useState(null);
+  const [addPostDialogOpen, setAddPostDialogOpen] = React.useState(false);
+
+  function addPost(content) {
+    PostService.createPost(username, content)
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+
 
   function deletePost(postid) {
     PostService.deletePostById(postid)
@@ -134,6 +150,7 @@ export default function AllPosts() {
                   </SvgIcon>
                 }
                 variant="contained"
+                onClick={() => setAddPostDialogOpen(true)}
               >
                 Add
               </Button>
@@ -169,6 +186,11 @@ export default function AllPosts() {
           </Grid>
         </Stack>
       </Container>
+      <AddPostDialog
+        open={addPostDialogOpen}
+        handleClose={() => setAddPostDialogOpen(false)}
+        handleAddPost={addPost}
+      />
     </Box>
   );
 }
