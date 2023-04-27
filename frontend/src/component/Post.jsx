@@ -16,13 +16,30 @@ import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { useEffect } from "react";
 import { UserService } from "../service/UserService";
+import { useNavigate } from "react-router-dom";
+import cookie from "react-cookies";
 
 export default function Post(props) {
   const post_info = props.post;
+  const navigate = useNavigate();
   const [content, setContent] = useState(post_info.content);
   const [timestamp, setTimestamp] = useState(post_info.updatedAt);
   const [editMode, setEditMode] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [activeUsername, setActiveUsername] = React.useState(null);
+
+
+  useEffect(() => {
+    setActiveUsername(cookie.load("username"));
+  }, []);
+
+  const handleUsernameClick = (username) => {
+    if (username === activeUsername) {
+      navigate("/user-post");
+      return;
+    }
+    navigate(`/${username}`);
+  };  
 
   useEffect(() => {
     UserService.getUserInfo(post_info.username).then((res) => {
@@ -45,6 +62,12 @@ export default function Post(props) {
 
   return (
     <Card sx={{ maxWidth: 500 }}>
+          <Typography
+      component="span"
+      variant="subtitle1"
+      sx={{ cursor: 'pointer' }}
+      onClick={() => handleUsernameClick(post_info.username)}
+    >
       <CardHeader
         avatar={
           <Avatar src={profileImage} aria-label="recipe">
@@ -62,6 +85,7 @@ export default function Post(props) {
           </Box>
         }
       />
+    </Typography>
       <CardContent>
         {editMode ? (
           <textarea
@@ -76,7 +100,7 @@ export default function Post(props) {
           </Typography>
         )}
       </CardContent>
-      {props.login === "user" && (
+      {props.login === activeUsername && (
         <CardActions disableSpacing>
           {editMode ? (
             <IconButton aria-label="save" onClick={editSave}>

@@ -15,6 +15,7 @@ function App() {
         <Route path="login" element={<LoginDialog />} />
         <Route path="signup" element={<Signup />} />
         <Route path="user-post" element={<UserPost />} />
+        <Route path="/:username" element={<UserPost />} />
       </Routes>
     </div>
   );

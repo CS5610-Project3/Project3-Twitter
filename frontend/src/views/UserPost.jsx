@@ -16,17 +16,23 @@ import { useNavigate } from "react-router";
 import Avatar from "@mui/material/Avatar";
 import { PostService } from "../service/PostService";
 import AddPostDialog from "../component/AddPostDialog";
+import { useParams } from "react-router-dom";
 
 
 export default function AllPosts() {
+  const params = useParams();
+  const tempUsername = params.username;
   const [posts, setPosts] = React.useState([]);
-
   const navigator = useNavigate();
   const isLogin = cookie.load(TOKEN_COOKIE_NAME);
-  const username = cookie.load("username");
+  let username = cookie.load("username");
   const [timestamp, setTimestamp] = React.useState(null);
   const [avatartURL, setAvatarURL] = React.useState(null);
   const [addPostDialogOpen, setAddPostDialogOpen] = React.useState(false);
+
+  if (tempUsername !== undefined && tempUsername !== username) {
+    username = tempUsername;
+  }
 
   function addPost(content) {
     PostService.createPost(username, content)
@@ -142,17 +148,23 @@ export default function AllPosts() {
               </Stack>
             </Stack>
             <div>
+            {
+              tempUsername !== undefined &&
+              tempUsername !== username ? (
               <Button
                 startIcon={
                   <SvgIcon fontSize="small">
                     <PlusIcon />
                   </SvgIcon>
-                }
-                variant="contained"
-                onClick={() => setAddPostDialogOpen(true)}
-              >
-                Add
-              </Button>
+                  }
+                  variant="contained"
+                  onClick={() => setAddPostDialogOpen(true)}
+                >
+                  Add
+                </Button>
+              ) : null
+            }
+
             </div>
           </Stack>
 
@@ -175,7 +187,7 @@ export default function AllPosts() {
                 }}
               >
                 <Post
-                  login={"user"}
+                  login={username}
                   post={post}
                   handleDeleteClick={deletePost}
                   handleEditClick={editPost}
