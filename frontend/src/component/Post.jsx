@@ -17,6 +17,7 @@ import { formatDistanceToNow } from "date-fns";
 import { UserService } from "../service/UserService";
 import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 export default function Post(props) {
   const post_info = props.post;
@@ -88,7 +89,7 @@ export default function Post(props) {
               >
                 {post_info.username}
               </Typography>
-              <img
+              {/* <img
                 src="/src/assets/Twitter_Verified_Badge.svg"
                 alt="Verified"
                 style={{
@@ -97,7 +98,8 @@ export default function Post(props) {
                   width: "1.1rem",
                   height: "auto",
                 }}
-              />
+              /> */}
+              <VerifiedIcon sx={{ marginLeft: "0.25rem", fill: "blue", width: "1.1rem", height: "auto" }} />
             </Box>
             <Box component="span" display="flex" alignItems="center">
               <SvgIcon
