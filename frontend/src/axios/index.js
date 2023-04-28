@@ -5,7 +5,7 @@ import { TOKEN_COOKIE_NAME } from "../constant";
 const token = cookie.load(TOKEN_COOKIE_NAME);
 
 export default axios.create({
-  baseURL: "http://localhost:3500",
+  baseURL: "https://xiaorui-shen-yuchen-cao-jiayi-lu.onrender.com/",
   headers: {
     Authorization: `Bearer ${token}`,
   },
