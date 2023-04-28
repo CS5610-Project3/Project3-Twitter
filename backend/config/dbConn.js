@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const DB_ENDPOINT = 'mongodb+srv://project3:test123@cluster0.r7mqvfk.mongodb.net/TwitterDB?retryWrites=true&w=majority';
-
+const DB_ENDPOINT =
+  'mongodb+srv://project3:test123@cluster0.r7mqvfk.mongodb.net/TwitterDB?retryWrites=true&w=majority';
 
 const connectDB = async () => {
   try {

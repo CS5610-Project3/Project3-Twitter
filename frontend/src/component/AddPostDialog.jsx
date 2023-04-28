@@ -18,9 +18,7 @@ export default function AddPostDialog({ open, handleClose, handleAddPost }) {
     // Replace inappropriate words with asterisks
     const cleanContent = content
       .split(" ")
-      .map((word) =>
-        filter.isProfane(word) ? word.replace(/./g, "*") : word
-      )
+      .map((word) => (filter.isProfane(word) ? word.replace(/./g, "*") : word))
       .join(" ");
     handleAddPost(cleanContent);
     setContent("");

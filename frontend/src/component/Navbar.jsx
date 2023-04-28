@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,9 +12,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import { useEffect } from "react";
 import cookie from "react-cookies";
-import { TOKEN_COOKIE_NAME as T, TOKEN_COOKIE_NAME } from "../constant";
+import { TOKEN_COOKIE_NAME } from "../constant";
 import { useNavigate } from "react-router";
 import { UserService } from "../service/UserService";
 
@@ -81,25 +81,29 @@ export default function Navbar() {
           {hasLoggedIn && (
             <div>
               <Button color="inherit" onClick={handleOpenUserMenu}>
-                <Avatar src={profileImage} aria-label="recipe" sx={{marginRight: 1} }></Avatar>
+                <Avatar
+                  src={profileImage}
+                  aria-label="recipe"
+                  sx={{ marginRight: 1 }}
+                ></Avatar>
                 <Typography variant="button">{activeUsername}</Typography>
                 <KeyboardArrowDownIcon />
               </Button>
               <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleClose} component={Link} to="/">
                   Main Page
