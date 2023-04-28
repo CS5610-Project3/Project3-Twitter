@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,12 +12,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useRef, useEffect } from "react";
 import { TOKEN_COOKIE_NAME } from "../constant";
 import axios from "../axios/index";
 import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
-
 
 const theme = createTheme();
 
@@ -70,7 +69,7 @@ export default function SignUp() {
     opacity: 0,
     transition: "opacity 0.5s ease-in-out",
   };
-  
+
   const alertContainerStyles = {
     position: "relative",
     height: "56px",
@@ -86,11 +85,16 @@ export default function SignUp() {
       setErrMsg("Invalid username or password");
       return;
     }
-    
-      axios.post(REGISTRATION_URL, JSON.stringify({ username: user, password: pwd }), {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
+
+    axios
+      .post(
+        REGISTRATION_URL,
+        JSON.stringify({ username: user, password: pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         const token = res.data.id_token;
         const username = res.data.username;
@@ -124,32 +128,32 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-                    <Box sx={alertContainerStyles}>
-          {success ? (
-            <Alert 
-              severity="success" 
-              sx={{
-                ...alertStyles,
-                opacity: alertVisible ? 1 : 0,
-              }}
-              ref={errRef}
-            >
-              You are singed up successfully!
-            </Alert>
-          ) : (
-            errMsg && (
-              <Alert     
-                severity="error"
+          <Box sx={alertContainerStyles}>
+            {success ? (
+              <Alert
+                severity="success"
                 sx={{
                   ...alertStyles,
                   opacity: alertVisible ? 1 : 0,
                 }}
                 ref={errRef}
               >
-                {errMsg}
+                You are singed up successfully!
               </Alert>
-            )
-          )}
+            ) : (
+              errMsg && (
+                <Alert
+                  severity="error"
+                  sx={{
+                    ...alertStyles,
+                    opacity: alertVisible ? 1 : 0,
+                  }}
+                  ref={errRef}
+                >
+                  {errMsg}
+                </Alert>
+              )
+            )}
           </Box>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
