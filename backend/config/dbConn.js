@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
-
-const DB_ENDPOINT =
-  'mongodb+srv://project3:test123@cluster0.r7mqvfk.mongodb.net/TwitterDB?retryWrites=true&w=majority';
+require('dotenv').config();
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(DB_ENDPOINT, {
+    await mongoose.connect(process.env.DB_ENDPOINT, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
