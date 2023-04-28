@@ -32,9 +32,6 @@ export default function AllPosts() {
   const [displayedPosts, setDisplayedPosts] = useState(5);
   const [loading, setLoading] = useState(false);
 
-  // 有tempUsername代表是從別人的頁面進來的，這時候要把username設為tempUsername
-  // 沒有代表是從自己的頁面進來的，這時候要把cookieUsername設為username
-
   useEffect(() => {
     if (tempUsername) {
       UserService.getUserInfo(tempUsername)
@@ -116,6 +113,12 @@ export default function AllPosts() {
 
 
   function addPost(content) {
+    let username;
+    if (tempUsername) {
+      username = tempUsername;
+    } else {
+      username = cookieUsername;
+    }
     PostService.createPost(username, content)
       .then((res) => {
         console.log(res);
@@ -171,27 +174,6 @@ export default function AllPosts() {
 
     return `${month} ${day}, ${year}`;
   }
-
-  // useEffect(() => {
-  //     UserService.getUserInfo(username)
-  //       .then((res) => {
-  //         const timestamp = res.data.userData.createdAt;
-  //         const formattedTimestamp = formatDate(timestamp);
-  //         setAvatarURL(res.data.userData.profileImage);
-  //         setTimestamp(formattedTimestamp);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //     PostService.getPostsByUser(username)
-  //       .then((res) => {
-  //         console.log(res);
-  //         setPosts(res.data.posts);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  // }, []);
 
   const noMorePosts = displayedPosts >= posts.length;
 
