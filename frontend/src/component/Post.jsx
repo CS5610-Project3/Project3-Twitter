@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -12,9 +13,7 @@ import ClockIcon from "@heroicons/react/24/solid/ClockIcon";
 import Box from "@mui/material/Box";
 import SvgIcon from "@mui/material/SvgIcon";
 import Avatar from "@mui/material/Avatar";
-import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { useEffect } from "react";
 import { UserService } from "../service/UserService";
 import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
@@ -27,6 +26,7 @@ export default function Post(props) {
   const [editMode, setEditMode] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [activeUsername, setActiveUsername] = React.useState(null);
+  const [isLogin, setIsLogin] = React.useState(false);
 
   useEffect(() => {
     setActiveUsername(cookie.load("username"));
@@ -108,7 +108,11 @@ export default function Post(props) {
                 <ClockIcon />
               </SvgIcon>
               <Box component="span" sx={{ marginLeft: "0.3rem" }}>
-                <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.8rem" }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontSize: "0.8rem" }}
+                >
                   {formatRelativeTime(timestamp)}
                 </Typography>
               </Box>
@@ -117,7 +121,12 @@ export default function Post(props) {
         }
       />
 
-      <CardContent sx={{ marginBottom: editMode || props.login === activeUsername ? "0px" : "20px" }}>
+      <CardContent
+        sx={{
+          marginBottom:
+            editMode || props.login === activeUsername ? "0px" : "20px",
+        }}
+      >
         {editMode ? (
           <textarea
             value={content}
@@ -157,10 +166,7 @@ export default function Post(props) {
               <EditIcon />
             </IconButton>
           )}
-          <IconButton
-            aria-label="delete"
-            onClick={handleDeleteClick}
-          >
+          <IconButton aria-label="delete" onClick={handleDeleteClick}>
             <DeleteIcon />
           </IconButton>
         </CardActions>
