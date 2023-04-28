@@ -9,6 +9,7 @@ import SvgIcon from "@mui/material/SvgIcon";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 function UserCard(props) {
   const user_info = props.card;
@@ -78,7 +79,7 @@ function UserCard(props) {
               >
                 {user_info.username}
               </Typography>
-              <img
+              {/* <img
                 src="/src/assets/Twitter_Verified_Badge.svg"
                 alt="Verified"
                 style={{
@@ -87,7 +88,8 @@ function UserCard(props) {
                   width: "1.1rem",
                   height: "auto",
                 }}
-              />
+              /> */}
+              <VerifiedIcon sx={{ marginLeft: "0.25rem", fill: "blue", width: "1.1rem", height: "auto" }} />
             </Box>
             <Box component="span" display="flex" alignItems="center">
               <SvgIcon
