@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,7 +10,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useRef, useEffect, useContext } from "react";
 import { TOKEN_COOKIE_NAME } from "../constant";
 import Alert from "@mui/material/Alert";
 import axios from "../axios/index";
@@ -44,14 +44,12 @@ export default function LoginDialog() {
     transition: "opacity 0.5s ease-in-out",
   };
 
-  
   const alertContainerStyles = {
     position: "relative",
     height: "56px",
     width: "100%",
     marginBottom: "16px",
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,7 +80,6 @@ export default function LoginDialog() {
         }, 1500);
       });
   };
-  
 
   return (
     <ThemeProvider theme={theme}>
@@ -97,31 +94,31 @@ export default function LoginDialog() {
           }}
         >
           <Box sx={alertContainerStyles}>
-          {success ? (
-            <Alert 
-              severity="success" 
-              sx={{
-                ...alertStyles,
-                opacity: alertVisible ? 1 : 0,
-              }}
-              ref={errRef}
-            >
-              You are logged in!
-            </Alert>
-          ) : (
-            errMsg && (
-              <Alert     
-                severity="error"
+            {success ? (
+              <Alert
+                severity="success"
                 sx={{
                   ...alertStyles,
                   opacity: alertVisible ? 1 : 0,
                 }}
                 ref={errRef}
               >
-                {errMsg}
+                You are logged in!
               </Alert>
-            )
-          )}
+            ) : (
+              errMsg && (
+                <Alert
+                  severity="error"
+                  sx={{
+                    ...alertStyles,
+                    opacity: alertVisible ? 1 : 0,
+                  }}
+                  ref={errRef}
+                >
+                  {errMsg}
+                </Alert>
+              )
+            )}
           </Box>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />

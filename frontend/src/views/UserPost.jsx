@@ -35,48 +35,48 @@ export default function AllPosts() {
   useEffect(() => {
     if (tempUsername) {
       UserService.getUserInfo(tempUsername)
-      .then((res) => {
-        const timestamp = res.data.userData.createdAt;
-        const formattedTimestamp = formatDate(timestamp);
-        setAvatarURL(res.data.userData.profileImage);
-        setTimestamp(formattedTimestamp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          const timestamp = res.data.userData.createdAt;
+          const formattedTimestamp = formatDate(timestamp);
+          setAvatarURL(res.data.userData.profileImage);
+          setTimestamp(formattedTimestamp);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       UserService.getUserInfo(cookieUsername)
-      .then((res) => {
-        const timestamp = res.data.userData.createdAt;
-        const formattedTimestamp = formatDate(timestamp);
-        setAvatarURL(res.data.userData.profileImage);
-        setTimestamp(formattedTimestamp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          const timestamp = res.data.userData.createdAt;
+          const formattedTimestamp = formatDate(timestamp);
+          setAvatarURL(res.data.userData.profileImage);
+          setTimestamp(formattedTimestamp);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, []);
 
   useEffect(() => {
     if (tempUsername) {
       PostService.getPostsByUser(tempUsername)
-      .then((res) => {
-        console.log(res);
-        setPosts(res.data.posts);
-      }) 
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          console.log(res);
+          setPosts(res.data.posts);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       PostService.getPostsByUser(cookieUsername)
-      .then((res) => {
-        console.log(res);
-        setPosts(res.data.posts);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          console.log(res);
+          setPosts(res.data.posts);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, []);
 
@@ -110,7 +110,6 @@ export default function AllPosts() {
   useEffect(() => {
     setLoading(false);
   }, [displayedPosts]);
-
 
   function addPost(content) {
     let username;
@@ -222,7 +221,7 @@ export default function AllPosts() {
               </Stack>
             </Stack>
             <div>
-              { !tempUsername ? (
+              {!tempUsername ? (
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
