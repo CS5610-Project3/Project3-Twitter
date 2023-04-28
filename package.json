@@ -1,0 +1,30 @@
+{
+  "name": "project3-twitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -ws --if-present",
+    "prod": "npm run start -w backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CS5610-Project3/Project3-Twitter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CS5610-Project3/Project3-Twitter/issues"
+  },
+  "homepage": "https://github.com/CS5610-Project3/Project3-Twitter#readme",
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+}
