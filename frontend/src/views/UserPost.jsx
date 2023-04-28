@@ -25,12 +25,63 @@ export default function AllPosts() {
   const [posts, setPosts] = React.useState([]);
   const navigator = useNavigate();
   const isLogin = cookie.load(TOKEN_COOKIE_NAME);
-  let username = cookie.load("username");
+  const cookieUsername = cookie.load("username");
   const [timestamp, setTimestamp] = React.useState(null);
   const [avatartURL, setAvatarURL] = React.useState(null);
   const [addPostDialogOpen, setAddPostDialogOpen] = React.useState(false);
   const [displayedPosts, setDisplayedPosts] = useState(5);
   const [loading, setLoading] = useState(false);
+
+  // 有tempUsername代表是從別人的頁面進來的，這時候要把username設為tempUsername
+  // 沒有代表是從自己的頁面進來的，這時候要把cookieUsername設為username
+
+  useEffect(() => {
+    if (tempUsername) {
+      UserService.getUserInfo(tempUsername)
+      .then((res) => {
+        const timestamp = res.data.userData.createdAt;
+        const formattedTimestamp = formatDate(timestamp);
+        setAvatarURL(res.data.userData.profileImage);
+        setTimestamp(formattedTimestamp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    } else {
+      UserService.getUserInfo(cookieUsername)
+      .then((res) => {
+        const timestamp = res.data.userData.createdAt;
+        const formattedTimestamp = formatDate(timestamp);
+        setAvatarURL(res.data.userData.profileImage);
+        setTimestamp(formattedTimestamp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tempUsername) {
+      PostService.getPostsByUser(tempUsername)
+      .then((res) => {
+        console.log(res);
+        setPosts(res.data.posts);
+      }) 
+      .catch((err) => {
+        console.log(err);
+      });
+    } else {
+      PostService.getPostsByUser(cookieUsername)
+      .then((res) => {
+        console.log(res);
+        setPosts(res.data.posts);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, []);
 
   const handleScroll = () => {
     const scrollTop =
@@ -48,7 +99,7 @@ export default function AllPosts() {
       setLoading(true);
       setTimeout(() => {
         setDisplayedPosts(displayedPosts + 10);
-      }, 500); // add a delay of 1 second
+      }, 500);
     }
   };
 
@@ -63,9 +114,6 @@ export default function AllPosts() {
     setLoading(false);
   }, [displayedPosts]);
 
-  if (tempUsername !== undefined && tempUsername !== username) {
-    username = tempUsername;
-  }
 
   function addPost(content) {
     PostService.createPost(username, content)
@@ -124,30 +172,26 @@ export default function AllPosts() {
     return `${month} ${day}, ${year}`;
   }
 
-  useEffect(() => {
-    if (isLogin) {
-      UserService.getUserInfo(username)
-        .then((res) => {
-          const timestamp = res.data.userData.createdAt;
-          const formattedTimestamp = formatDate(timestamp);
-          setAvatarURL(res.data.userData.profileImage);
-          setTimestamp(formattedTimestamp);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      PostService.getPostsByUser(username)
-        .then((res) => {
-          console.log(res);
-          setPosts(res.data.posts);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      navigator("login");
-    }
-  }, []);
+  // useEffect(() => {
+  //     UserService.getUserInfo(username)
+  //       .then((res) => {
+  //         const timestamp = res.data.userData.createdAt;
+  //         const formattedTimestamp = formatDate(timestamp);
+  //         setAvatarURL(res.data.userData.profileImage);
+  //         setTimestamp(formattedTimestamp);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //     PostService.getPostsByUser(username)
+  //       .then((res) => {
+  //         console.log(res);
+  //         setPosts(res.data.posts);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  // }, []);
 
   const noMorePosts = displayedPosts >= posts.length;
 
@@ -168,7 +212,7 @@ export default function AllPosts() {
           <Stack direction="row" justifyContent="space-between" spacing={4}>
             <Stack alignItems="center" direction="row" spacing={2}>
               <Avatar
-                alt={username}
+                alt={!tempUsername ? cookieUsername : tempUsername}
                 src={avatartURL}
                 sx={{ width: "5rem", height: "5rem" }}
               />
@@ -180,7 +224,7 @@ export default function AllPosts() {
                   fontWeight: "600",
                 }}
               >
-                {username}
+                {!tempUsername ? cookieUsername : tempUsername}
               </Typography>
               <Stack alignItems="center" direction="row" spacing={1}>
                 <SvgIcon color="action" fontSize="small">
@@ -196,7 +240,7 @@ export default function AllPosts() {
               </Stack>
             </Stack>
             <div>
-              {tempUsername === null || tempUsername !== username ? (
+              { !tempUsername ? (
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -231,7 +275,7 @@ export default function AllPosts() {
                 }}
               >
                 <Post
-                  login={username}
+                  login={!tempUsername ? cookieUsername : tempUsername}
                   post={post}
                   handleDeleteClick={deletePost}
                   handleEditClick={editPost}

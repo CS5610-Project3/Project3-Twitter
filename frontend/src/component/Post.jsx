@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { UserService } from "../service/UserService";
 import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
+import axios from "axios";
 
 export default function Post(props) {
   const post_info = props.post;
@@ -27,10 +28,12 @@ export default function Post(props) {
   const [editMode, setEditMode] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [activeUsername, setActiveUsername] = React.useState(null);
+  const [isLogin, setIsLogin] = React.useState(false);
 
   useEffect(() => {
     setActiveUsername(cookie.load("username"));
   }, []);
+
 
   const handleUsernameClick = (username) => {
     if (username === activeUsername) {

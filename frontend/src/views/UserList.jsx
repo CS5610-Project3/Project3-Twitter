@@ -31,6 +31,7 @@ export default function UserList(props) {
                 paddingBottom: "1rem",
                 borderBottom:
                   index === cards.length - 1 ? "none" : "1px solid #e0e0e0",
+                minWidth: 500,
               }}
             >
               <UserCard card={card} />
