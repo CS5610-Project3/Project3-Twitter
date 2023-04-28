@@ -37,7 +37,7 @@ app.use('/api/post/', require('./routes/postRoutes'));
 app.use('/api/user/', require('./routes/userRoutes'));
 
 
-let frontend_dir = path.join(__dirname, '..', 'p3client', 'dist')
+let frontend_dir = path.join(__dirname, '..', 'frontend', 'dist')
 
 app.use(express.static(frontend_dir));
 app.get('*', function (req, res) {
